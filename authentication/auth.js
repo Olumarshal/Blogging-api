@@ -1,4 +1,4 @@
-var passport = require('passport');
+const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
 const User = require('../models/user.model');
 
