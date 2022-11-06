@@ -4,13 +4,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-mongoose.Promise = global.Promise;
-
 class Connection {
-  constructor() {
-    this.mongoServer = MongoMemoryServer.create();
-    this.connection = null;
-  }
 
   async connect() {
     this.mongoServer = await MongoMemoryServer.create();
@@ -39,12 +33,8 @@ class Connection {
   }
 }
 
-/**
- * Create the initial database connection.
- *
- * @async
- * @return {Promise<Object>}
- */
+
+
 exports.connect = async () => {
   const conn = new Connection();
   await conn.connect();
