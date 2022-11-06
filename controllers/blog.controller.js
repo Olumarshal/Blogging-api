@@ -22,7 +22,7 @@ const createBlog = async (req, res, next) => {
   await user.save()
   
 
-  return res.json({ status: true, savedBlog, user: req.user,
+  return res.status(200).json({ status: true, savedBlog, user: req.user,
     token: req.query.secret_token });
 
 };
@@ -45,30 +45,16 @@ const getBlog = async (req, res) => {
 
 const getAllBlogs = async (req, res) => {
   const { query } = req;
-  const { author, title, tags, page = 1, per_page = 20 } = query;
+  const { state = "published", page = 1, per_page = 20 } = query;
 
-  // const findQuery = {};
+  const findQuery = {};
 
-  // if (state) {
-  //     findQuery.state = state;
-  // }
-
-  // const sortQuery = {};
-
-  // const sortAttributes = order_by.split(',')
-
-  // for (const attribute of sortAttributes) {
-  //     if (order === 'asc' && order_by) {
-  //         sortQuery[attribute] = 1
-  //     }
-
-  //     if (order === 'desc' && order_by) {
-  //         sortQuery[attribute] = -1
-  //     }
-  // }
+  if (state) {
+    findQuery.state = state;
+  }
 
   const allBlogs = await Blog
-  .find()
+  .find(findQuery)
   .skip(page)
   .limit(per_page);
 
@@ -100,9 +86,10 @@ const updateBlog = async (req, res) => {
 };
 
 const deleteBlog = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params.id;
+  const authorId = req.user._id
 
-  const blog = await Blog.deleteOne({ _id: id });
+  const blog = await Blog.deleteOne({ _id: authorId });
   
   return res.json({ status: true, blog });
 };
