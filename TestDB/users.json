@@ -1,0 +1,23 @@
+[
+    {
+        "id": "6364f4f4b249cedc0dab05a9",
+        "firstname": "Doren",
+        "lastname": "Abbey",
+        "email": "naij@yahoo.com",
+        "username": "Dabyjbvvcc",
+        "password":"$2b$10$Lk6XNqP91U95tl97tuv.8uFqTAiMTGdI0b6b1pjjMH4Bo.IOeaS3m",
+        "createdAt": "2022-11-04T11:18:12.827+00:00",
+        "updatedAt": "2022-11-04T11:18:12.827+00:00"
+    },
+    {
+        "id": "6364f4f4b249cedc0dab05a9",
+        "firstname": "Dash",
+        "lastname": "Volley",
+        "email": "dash@yahoo.com",
+        "username": "Dashv123",
+        "password":"$2b$10$2wxFcjCWfeIvLai8xhsCEOaX3oMbCLu2TowwQbqSPLOLrenWxKahC",
+      "createdAt": "2022-11-01T20:58:10.981+00:00",
+      "updatedAt": "2022-11-01T20:58:10.981+00:00"
+    }
+  ]
+  

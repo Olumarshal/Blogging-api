@@ -1,8 +1,12 @@
 const { Blog } = require('../models/blog.model');
+const { User } = require('../models/user.model')
+
 
 // CREATE NEW BLOG
 const createBlog = async (req, res, next) => {
   const body = req.body;
+  const user = await User.findById(body.userId);
+
   const newBlog = await Blog.create({
     title: body.title,
     description: body.description,
@@ -10,9 +14,15 @@ const createBlog = async (req, res, next) => {
     reading_time: body.reading_time,
     tags: body.tags,
     body: body.body,
+    user: user._id
   });
 
-  return res.json({ status: true, newBlog, user: req.user,
+  const savedBlog = await newBlog.save()
+  user.blogs = user.blogs.concat(savedBlog._id)
+  await user.save()
+  
+
+  return res.json({ status: true, savedBlog, user: req.user,
     token: req.query.secret_token });
 
 };
@@ -26,6 +36,9 @@ const getBlog = async (req, res) => {
     return res.status(404).json({ status: false, blog: null });
   }
 
+  blog.read_count++
+  await blog.save();
+  
   return res.json({ status: true, blog });
 };
 
@@ -35,13 +48,6 @@ const getAllBlogs = async (req, res) => {
   const { author, title, tags, page = 1, per_page = 20 } = query;
 
   // const findQuery = {};
-
-  // if (created_at) {
-  //     findQuery.created_at = {
-  //         $gt: moment(created_at).startOf('day').toDate(),
-  //         $lt: moment(created_at).endOf('day').toDate(),
-  //     }
-  // }
 
   // if (state) {
   //     findQuery.state = state;

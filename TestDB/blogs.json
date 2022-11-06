@@ -1,0 +1,50 @@
+[
+  {
+    "id": "63618862a99fac185274f2e5",
+    "title": "things fall apart",
+    "description": "very short",
+    "author": "Mars Ken",
+    "state": "draft",
+    "reading_time": "4min",
+    "tags": "Don't know",
+    "body": "blah blah blah",
+    "createdAt": "2022-11-01T20:58:10.981+00:00",
+    "updatedAt": "2022-11-01T20:58:10.981+00:00"
+  },
+  {
+    "id": "63618862a99fac185274f2e5",
+    "title": "things fall apart",
+    "description": "very short",
+    "author": "Mars Ken",
+    "state": "draft",
+    "reading_time": "4min",
+    "tags": "Don't know",
+    "body": "blah blah blah",
+    "createdAt": "2022-11-01T20:58:10.981+00:00",
+    "updatedAt": "2022-11-01T20:58:10.981+00:00"
+  },
+  {
+    "id": "6361913b51d0732d7b9e9e60",
+    "title": "Think like a Negro",
+    "description": "test desc",
+    "author": "Steve Harv",
+    "state": "published",
+    "reading_time": "7min",
+    "tags": "things u want",
+    "body": "are u sure",
+    "createdAt": "2022-11-01T20:58:10.981+00:00",
+    "updatedAt": "2022-11-01T20:58:10.981+00:00"
+  },
+  {
+    "id": "6366c22761efb00f468bf70e",
+    "title": "Mad Max",
+    "description": "everything everything",
+    "author": "steve jobs",
+    "state": "published",
+    "reading_time": "4min",
+    "tags": "Don't know",
+    "body": "blah blah blah",
+    "createdAt": "2022-11-01T20:58:10.981+00:00",
+    "updatedAt": "2022-11-01T20:58:10.981+00:00"
+  }
+]
