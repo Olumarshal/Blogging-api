@@ -6,7 +6,7 @@ This is an api for a Blog app
 ## Requirements
 1. Users should have a first_name, last_name, email, password, (you can add other attributes you want to store about the user)
 2. A user should be able to sign up and sign in into the blog app
-3. Use JWT as authentication strategy and expire the token after 1 hour
+3. Implement JWT authentication strategy and expire the token after 1 hour
 4. A blog can be in two states; draft and published
 5. Logged in and not logged in users should be able to get a list of published blogs created
 6. Logged in and not logged in users should be able to to get a published blog
@@ -24,15 +24,14 @@ This is an api for a Blog app
     b. It should also be searchable by author, title and tags.
     c. It should also be orderable by read_count, reading_time and timestamp
 15. When a single blog is requested, the api should return the user information(the author) with the blog. The read_count of the blog too should be updated by 1
-16. Come up with any algorithm for calculating the reading_time of the blog.
-17. Write tests for all endpoints
+16. Test Application
 
 
 ---
 ## Setup
 - Install NodeJS, mongodb
 - pull this repo
-- update env with example.env
+- run npm intall
 - run `npm run start:dev`
 
 ---
@@ -58,7 +57,7 @@ This is an api for a Blog app
 | field  |  data_type | constraints  |
 |---|---|---|
 |  id |  string |  required |
-|  title |  string |  required | unique |
+|  title |  string |  required, unique |
 |  description | string  |  required|
 |  author  |  string |  required |
 |  state  |  string |  required, enum: ["draft", "published", default: "draft"]  |
@@ -74,7 +73,7 @@ This is an api for a Blog app
 
 ### Signup User
 
-- Route: /signup
+- Route: /api/v1/blog/signup
 - Method: POST
 - Body: 
 ```
@@ -105,7 +104,7 @@ Success
 ---
 ### Login User
 
-- Route: /login
+- Route: /api/v1/blog/login
 - Method: POST
 - Body: 
 ```
@@ -126,6 +125,63 @@ Success
 ```
 
 ...
+### Create Blog
 
+- Route: /api/v1/blog
+- Method: POST
+- Header
+    - Authorization: Query {token}
+- Body: 
+```
+{
+    "title": "Think like a Negro",
+    "description": "test desc",
+    "author": "Steve Harv",
+    "tags": "things u want",
+    "body": "are u sure",
+}
+```
+
+- Responses
+
+Success
+```
+{
+    "id": "6361913b51d0732d7b9e9e60",
+    "title": "Think like a Negro",
+    "description": "test desc",
+    "author": "Steve Harv",
+    "state": "draft",
+    "read_count": 2,
+    "reading_time": "7min",
+    "tags": "things u want",
+    "body": "are u sure",
+    "createdAt": "2022-11-01T20:58:10.981+00:00",
+    "updatedAt": "2022-11-01T20:58:10.981+00:00"
+}
+```
+---
+### Get blog
+
+- Route: /api/v1/blog/:id
+- Method: GET
+
+Success
+```
+{
+    "id": "6361913b51d0732d7b9e9e60",
+    "title": "Think like a Negro",
+    "description": "test desc",
+    "author": "Steve Harv",
+    "state": "draft",
+    "read_count": 3,
+    "reading_time": "7min",
+    "tags": "things u want",
+    "body": "are u sure",
+    "createdAt": "2022-11-01T20:58:10.981+00:00",
+    "updatedAt": "2022-11-01T20:58:10.981+00:00"
+}
+```
+---
 ## Contributor
 - Marshal Olu

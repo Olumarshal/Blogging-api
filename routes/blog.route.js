@@ -12,7 +12,7 @@ blogRouter.get('/', BlogController.getAllBlogs)
 
 blogRouter.patch('/:id', passport.authenticate('jwt', { session: false  }), BlogController.updateBlog)
 
-blogRouter.delete('/:id', BlogController.deleteBlog)
+blogRouter.delete('/:id',passport.authenticate('jwt', { session: false  }), BlogController.deleteBlog)
 
 
 module.exports = blogRouter;
