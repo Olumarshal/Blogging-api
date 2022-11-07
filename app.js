@@ -15,7 +15,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // routes
-app.use("/api/v1/blog", authRouter);
+app.use("/api/v1", authRouter);
 app.use("/api/v1/blog", blogRouter);
 
 // home route
