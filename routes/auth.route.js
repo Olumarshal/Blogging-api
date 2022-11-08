@@ -6,7 +6,8 @@ const AuthController = require('../controllers/auth.controller');
 const authRouter = express.Router();
 
 // REGISTER
-authRouter.post('/signup', passport.authenticate('signup', { session: false }), AuthController.signup);
+// authRouter.post('/signup', passport.authenticate('signup', { session: false }), AuthController.signup);
+authRouter.post('/signup', AuthController.signup);
 
 
 // LOGIN

@@ -1,23 +1,37 @@
 const jwt = require("jsonwebtoken");
-const passport = require('passport');
+const passport = require("passport");
 const User = require("../models/user.model");
-
 
 require("dotenv").config();
 
 // SIGNUP LOGIC
 
 const signup = async (req, res, next) => {
-  const existingUser = await User.findOne({ username });
-  if (existingUser) {
-    return response.status(400).json({
-      error: "username must be unique",
+  try {
+    const existingUser = await User.findOne({ username: req.body.username });
+    if (existingUser) {
+      return res.status(400).json("username and email must be unique");
+    }
+    
+    const existingEmail = await User.findOne({ email: req.body.email });
+    if (existingEmail) { 
+      return res.status(400).json("username and email must be unique");
+    }
+    const newUser = await User.create({
+      username: req.body.username,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      password: req.body.password,
     });
+
+    return res.status(201).json({
+      message: "Signup successful",
+      newUser,
+    });
+  } catch (err) {
+    return res.status(500).json(err);
   }
-  return res.status(201).json({
-    message: "Signup successful",
-    user: req.user,
-  });
 };
 
 // LOGIN LOGIC
@@ -31,8 +45,7 @@ const login = async (req, res, next) => {
       }
 
       req.login(user, { session: false }, async (error) => {
-        if (error) 
-        return next(error);
+        if (error) return next(error);
 
         const body = { _id: user._id, email: user.email };
         const token = jwt.sign({ user: body }, "TOP_SECRET", {
