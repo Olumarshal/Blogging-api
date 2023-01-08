@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
+const { StatusCodes } = require('http-status-codes');
+const BadRequestError = require("../errors/bad-request")
 const User = require("../models/user.model");
 
 require("dotenv").config();
@@ -10,12 +12,12 @@ const signup = async (req, res, next) => {
   try {
     const existingUser = await User.findOne({ username: req.body.username });
     if (existingUser) {
-      return res.status(400).json("username and email must be unique");
+      return res.status(400).json("username not available");
     }
     
     const existingEmail = await User.findOne({ email: req.body.email });
     if (existingEmail) { 
-      return res.status(400).json("username and email must be unique");
+      return res.status(400).json("email already used");
     }
     const newUser = await User.create({
       username: req.body.username,
@@ -25,7 +27,7 @@ const signup = async (req, res, next) => {
       password: req.body.password,
     });
 
-    return res.status(201).json({
+    return res.status(StatusCodes.CREATED).json({
       message: "Signup successful",
       newUser,
     });
@@ -39,7 +41,7 @@ const login = async (req, res, next) => {
   passport.authenticate("login", async (err, user, info) => {
     try {
       if (err || !user) {
-        const error = new Error("An error occurred.");
+        const error = new Error("Invalid Credentials");
 
         return next(error);
       }
@@ -48,7 +50,7 @@ const login = async (req, res, next) => {
         if (error) return next(error);
 
         const body = { _id: user._id, email: user.email };
-        const token = jwt.sign({ user: body }, "TOP_SECRET", {
+        const token = jwt.sign({ user: body }, process.env.JWT_SECRET, {
           expiresIn: "1h",
         });
 

@@ -1,3 +1,4 @@
+require('express-async-errors');
 const express = require("express");
 const bodyParser = require("body-parser");
 
@@ -11,12 +12,19 @@ const authRouter = require("./routes/auth.route");
 
 const app = express();
 
+
+// Error Hander
+const notFoundMiddleware = require("./middleware/not-found")
+const errorHandlerMiddleware = require("./middleware/error-handler")
+
 // middleware
+app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // routes
-app.use("/api/v1", authRouter);
+app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/blog", blogRouter);
+
 
 // home route
 app.get("/", (req, res) => {
@@ -37,5 +45,9 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.json({ error: err.message });
 });
+
+
+app.use(notFoundMiddleware)
+app.use(errorHandlerMiddleware)
 
 module.exports = app;

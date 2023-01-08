@@ -1,30 +1,41 @@
-const { Blog } = require('../models/blog.model');
-const { User } = require('../models/user.model')
+const readTimeEstimate = require("read-time-estimate");
 
+const { Blog } = require("../models/blog.model");
+const User = require("../models/user.model");
 
 // CREATE NEW BLOG
 const createBlog = async (req, res, next) => {
-  const body = req.body;
-  const user = await User.findById(body.userId);
+  try {
+    const body = req.body;
 
-  const newBlog = await Blog.create({
-    title: body.title,
-    description: body.description,
-    author: body.author,
-    reading_time: body.reading_time,
-    tags: body.tags,
-    body: body.body,
-    user: user._id
-  });
+    // const user = await User.findById(req.user._id);
 
-  const savedBlog = await newBlog.save()
-  user.blogs = user.blogs.concat(savedBlog._id)
-  await user.save()
-  
+    const text = body;
+    const wpm = 265;
+    const words = text.toString().trim().split(/\s+/).length;
+    const time = Math.ceil(words / wpm);
+    const readingtime = `${time} min`;
 
-  return res.status(200).json({ status: true, savedBlog, user: req.user,
-    token: req.query.secret_token });
+    const newBlog = await Blog.create({
+      title: body.title,
+      description: body.description,
+      author: body.author,
+      reading_time: readingtime,
+      tags: body.tags,
+      body: body.body,
+      // user: user._id,
+      // user: req.user._id
+    });
 
+    return res.status(201).json({
+      status: "true",
+      message: "Blog Created",
+      blog: { ...newBlog._doc },
+      // token: req.query.secret_token,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 // GET SINGLE BLOG
@@ -36,30 +47,52 @@ const getBlog = async (req, res) => {
     return res.status(404).json({ status: false, blog: null });
   }
 
-  blog.read_count++
+  blog.read_count++;
   await blog.save();
-  
+
   return res.json({ status: true, blog });
 };
 
-
 const getAllBlogs = async (req, res) => {
-  const { query } = req;
-  const { state = "published", page = 1, per_page = 20 } = query;
+  const {
+    author,
+    title,
+    tags,
+    state,
+    // state = "published",
+    sort = 'createdAt'
+  } = req.query;
 
   const findQuery = {};
 
+  if (author) {
+    findQuery.author = { $regex: author, $options: "i" };
+  }
+  if (title) {
+    findQuery.title = { $regex: title, $options: "i" };
+  }
+  if (tags) {
+    findQuery.tags = { $regex: tags, $options: "i" };
+  }
   if (state) {
     findQuery.state = state;
   }
+  let result = Blog.find(findQuery)
+  if (sort) {
+    const sortList = sort.split(',').join(' ');
+    result = result.sort(sortList)
+} else {
+    result = result.sort('createdAt')
+}
 
-  const allBlogs = await Blog
-  .find(findQuery)
-  .skip(page)
-  .limit(per_page);
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 20
+    const skip = (page -1) * limit;
 
+    result = result.skip(skip).limit(limit)
 
-  return res.status(200).json({ status: true, allBlogs });
+  const allBlogs = await result
+  return res.status(200).json({ status: true, allBlogs, ndHits: allBlogs.length });
 };
 
 const updateBlog = async (req, res) => {
@@ -87,10 +120,10 @@ const updateBlog = async (req, res) => {
 
 const deleteBlog = async (req, res) => {
   const { id } = req.params.id;
-  const authorId = req.user._id
+  const authorId = req.user._id;
 
   const blog = await Blog.deleteOne({ _id: authorId });
-  
+
   return res.json({ status: true, blog });
 };
 
@@ -99,5 +132,5 @@ module.exports = {
   getBlog,
   getAllBlogs,
   updateBlog,
-  deleteBlog
-}
+  deleteBlog,
+};
