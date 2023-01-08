@@ -5,22 +5,22 @@ const app = require('../app');
 
 
 describe('validating user credentials', () => {
-    let conn;
+    // let conn;
 
-    beforeAll(async () => {
-        conn = await connect()
-    })
+    // beforeAll(async () => {
+    //     conn = await connect()
+    // })
 
-    afterEach(async () => {
-        await conn.cleanup()
-    })
+    // afterEach(async () => {
+    //     await conn.cleanup()
+    // })
 
-    afterAll(async () => {
-        await conn.disconnect()
-    })
+    // afterAll(async () => {
+    //     await conn.disconnect()
+    // })
 
     it('should signup a user', async () => {
-        const response = await supertest(app).post('/api/v1/blog/signup')
+        const response = await supertest(app).post('/api/v1/signup')
         .set('content-type', 'application/json')
         .send({ 
             username: 'Mars7', 
@@ -41,7 +41,7 @@ describe('validating user credentials', () => {
 
 
     it('should test if the username already exixt', async () => {
-        const response = await supertest(app).post('/api/v1/blog/signup')
+        const response = await supertest(app).post('/api/v1/signup')
         .set('content-type', 'application/json')
         .send({ 
             username: 'Mars7', 
@@ -53,7 +53,7 @@ describe('validating user credentials', () => {
         
         expect(response.status).toBe(400)
         expect(response.body).toHaveProperty('error')
-        expect(response.body.error).toBe("username must be unique")
+        expect(response.body.error).toBe("username and password must be unique")
     }, 100000)
 
     it('should login a user', async () => {
@@ -62,7 +62,7 @@ describe('validating user credentials', () => {
 
         // login user
         const response = await supertest(app)
-        .post('/api/v1/blog/login')
+        .post('/api/v1/login')
         .set('content-type', 'application/json')
         .send({ 
             username: 'Mars7', 

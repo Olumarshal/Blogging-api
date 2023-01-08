@@ -10,7 +10,7 @@ const BlogSchema = new Schema({
   author: { type: String, required: true },
   state: { type: String, required: true, enum: ["draft", "published"], default: "draft" },
   read_count: { type: Number, required: true, default: 0 },
-  reading_time: { type: String, required: true },
+  reading_time: { type: {}, required: true },
   tags: { type: String, required: true },
   body: { type: String, required: true },
   user: { 
